@@ -4,6 +4,8 @@ from functools import partial
 from pathlib import Path
 import tempfile
 
+import torch
+from torch import nn
 from torch.utils.data import DataLoader, random_split
 from torchvision import datasets
 from torchvision.transforms import ToTensor
@@ -15,10 +17,10 @@ import torch.distributed.checkpoint as dcp
 from ray.tune.schedulers import ASHAScheduler
 import ray.cloudpickle as pickle
 
-from model import *
+from neural_network import NeuralNetwork
 
 def load_data(batch_size):
-
+    #TODO fix data loading - only once at the begining
     training_data = datasets.FashionMNIST(
         root="data",
         train=True,
@@ -97,6 +99,7 @@ def train_model(config, device=None, model = None):
             optimizer.zero_grad()
 
             # print statistics
+            #TODO fix printing 
             running_loss += loss.item()
             epoch_steps += 1
             if i % 2000 == 1999:  # print every 2000 mini-batches
@@ -168,7 +171,6 @@ def save_model(model, optimizer):
                 }, 'outputs/final_model.pth')
 
 def main(max_num_epochs, num_samples):
-    data_dir = os.path.abspath("./data")
     
     device = (
         "cuda"
@@ -181,8 +183,6 @@ def main(max_num_epochs, num_samples):
 
     model = NeuralNetwork().to(device)
 
-    print('Most kezdődik')
-    #load_data()
     config = {
         "momentum": tune.choice([0.5, 0.9, 0.98]),
         "lr": tune.loguniform(0.0001, 0.1),

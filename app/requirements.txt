@@ -1,3 +1,4 @@
+#-f https://files.pythonhosted.org/packages/bf/55/b6c74df4695f94a9c3505021bc2bd662e271d028d055b3b2529f3442a3bd/torch-2.4.0-cp312-cp312-manylinux1_x86_64.whl
 flask
 google-cloud-storage
 torchvision

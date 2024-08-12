@@ -8,7 +8,7 @@ from PIL import Image
 from flask import Flask, jsonify, request
 from google.cloud import storage
 
-from model import NeuralNetwork
+import training.neural_network as neural_network
 
 app = Flask(__name__)
 client = storage.Client(project="neural network")
@@ -16,7 +16,7 @@ bucket = client.get_bucket("continental_neural_network")
 blob = bucket.blob("outputs/final_model.pth")
 stored_state_dict = blob.download_as_string()
 buffer = io.BytesIO(stored_state_dict)
-model = NeuralNetwork()
+model = neural_network.NeuralNetwork()
 model.load_state_dict(torch.load(buffer,map_location=torch.device('cpu')))
 #model = model(pretrained=True)               # Trained on 1000 classes from ImageNet
 model.eval()                                              # Turns off autograd

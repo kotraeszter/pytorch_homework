@@ -1,10 +1,6 @@
 import torch
 from torch import nn
 
-# Get cpu, gpu or mps device for training.
-
-
-# Define model
 class NeuralNetwork(nn.Module):
     def __init__(self):
         super().__init__()
@@ -21,8 +17,6 @@ class NeuralNetwork(nn.Module):
         x = self.flatten(x)
         logits = self.linear_relu_stack(x)
         return logits
-
-#print(model)
 
 #for name, param in model.named_parameters():
 #    print(f"Layer: {name} | Size: {param.size()} | Values : {param[:2]} \n")
