@@ -1,0 +1,37 @@
+name: Docker Build and Push
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Checkout'
+        uses: 'actions/checkout@v3'
+
+      - name: 'Google auth'
+        id: 'auth'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          #workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
+          credentials_json: '${{ secrets.APPLICATION_DEFAULT_CREDENTIALS }}'
+          service_account: 'neural-network-continental@hallowed-chain-432118-r8.iam.gserviceaccount.com'
+      
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+        with:
+          project_id: 'hallowed-chain-432118-r8'
+   
+      - name: 'Docker auth'
+        run: |-
+          gcloud auth configure-docker us-docker.pkg.dev
+
+      - name: 'Build and push container'
+        run: |-
+          docker build . --file Dockerfile --tag=gcr.io/hallowed-chain-432118-r8/pytorch_predict_flask
+          docker push gcr.io/hallowed-chain-432118-r8/pytorch_predict_flask
